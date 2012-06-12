@@ -2,10 +2,11 @@ require 'rubygems'
 require 'rest-client'
 require 'json'
 require 'opsview_helper'
+require 'opsview_rest_timeout_error'
 
 class OpsviewRest
 
-  RELOAD_TIMEOUT_IN_SEC = 30 # after this time reload operation will be failed with timeout exception
+  RELOAD_TIMEOUT_IN_SEC = 40 # after this time reload operation will be failed with timeout exception
   RELOAD_INTERVAL_IN_SEC = 10 # interval between reloads
 
   attr_accessor :url, :username, :password, :rest
@@ -81,7 +82,7 @@ class OpsviewRest
 
     end while Time.now.to_i - start_time <= RELOAD_TIMEOUT_IN_SEC
 
-    raise "Reload has been failed by timeout (#{RELOAD_TIMEOUT_IN_SEC} seconds)"
+    raise OpsviewRestTimeoutError.new("Reload has been failed by timeout (#{RELOAD_TIMEOUT_IN_SEC} seconds). Most likely reload was completed by another process")
   end
 
   # creates an entity based on its properties

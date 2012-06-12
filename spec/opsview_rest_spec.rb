@@ -6,6 +6,7 @@ require 'rest-client'
 require File.expand_path('../../lib/opsview_rest', __FILE__)
 require File.expand_path('../../lib/opsview_rest/entity', __FILE__)
 require File.expand_path('../../lib/opsview_rest/host', __FILE__)
+require File.expand_path('../../lib/opsview_rest_timeout_error', __FILE__)
 require 'net/http'
 
 describe "OpsView functionality" do
@@ -123,7 +124,7 @@ describe "OpsView functionality" do
 
     expect {
       opsview.reload
-    }.to raise_error(RuntimeError, "Reload has been failed by timeout (#{OpsviewRest::RELOAD_TIMEOUT_IN_SEC} seconds)")
+    }.to raise_error(OpsviewRestTimeoutError)
   end
 
   it "should raise exception by timeout when reload can't be finished" do
@@ -134,7 +135,7 @@ describe "OpsView functionality" do
 
     expect {
       opsview.reload
-    }.to raise_error(RuntimeError, "Reload has been failed by timeout (#{OpsviewRest::RELOAD_TIMEOUT_IN_SEC} seconds)")
+    }.to raise_error(OpsviewRestTimeoutError)
   end
 
   it "should not reload when configuration status is uptodate" do

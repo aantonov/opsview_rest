@@ -1,0 +1,2 @@
+class OpsviewRestTimeoutError < StandardError
+end
